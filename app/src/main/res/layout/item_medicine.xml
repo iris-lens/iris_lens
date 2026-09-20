@@ -1,0 +1,61 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="14dp"
+    android:minHeight="64dp">
+
+    <LinearLayout
+        android:id="@+id/itemContent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground"
+        android:importantForAccessibility="yes">
+
+        <!--
+          tvNombre y tvDescripcion quedan con importantForAccessibility="no"
+          para que TalkBack los lea como UN solo nodo (el de itemContent, con
+          el contentDescription combinado que arma el adapter), en vez de dos
+          nodos separados como pasaba antes.
+        -->
+        <TextView
+            android:id="@+id/tvNombre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:importantForAccessibility="no" />
+
+        <TextView
+            android:id="@+id/tvDescripcion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginTop="2dp"
+            android:importantForAccessibility="no" />
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btnEditar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@android:drawable/ic_menu_edit"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/editar" />
+
+    <ImageButton
+        android:id="@+id/btnEliminar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="4dp"
+        android:src="@android:drawable/ic_menu_delete"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/eliminar" />
+
+</LinearLayout>

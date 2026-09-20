@@ -1,0 +1,39 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="14dp"
+    android:minHeight="64dp">
+
+    <TextView
+        android:id="@+id/tvNombre"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?android:attr/selectableItemBackground"
+        android:importantForAccessibility="yes" />
+
+    <ImageButton
+        android:id="@+id/btnEditar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@android:drawable/ic_menu_edit"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/editar" />
+
+    <ImageButton
+        android:id="@+id/btnEliminar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="4dp"
+        android:src="@android:drawable/ic_menu_delete"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/eliminar" />
+
+</LinearLayout>

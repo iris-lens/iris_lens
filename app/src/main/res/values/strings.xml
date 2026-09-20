@@ -1,3 +1,50 @@
 <resources>
     <string name="app_name">IrisLens</string>
+
+    <string name="disclaimer_title">Aviso Legal</string>
+
+    <string name="disclaimer_text">Iris Lens es una herramienta de apoyo para personas con discapacidad visual desarrollada como parte de un proyecto académico.\n\nLos resultados del reconocimiento pueden contener errores, por lo que se recomienda realizar varias capturas y verificar que sean consistentes.\n\nEsta aplicación no reemplaza la consulta con un médico, farmacéutico u otro profesional.\n\nAnte cualquier duda, consulte con una persona de confianza.\n\nLos desarrolladores no se responsabilizan por las decisiones tomadas en base a la información proporcionada por la aplicación.\n\nAl continuar, usted acepta utilizar la aplicación bajo su propia responsabilidad.</string>
+
+    <string name="disclaimer_accept">Acepto</string>
+    <string name="disclaimer_exit">Salir</string>
+
+    <string name="gestionar_medicamentos">Gestionar medicamentos</string>
+    <string name="gestionar_principios_activos">Gestionar principios activos</string>
+
+    <string name="agregar_medicamento">Agregar medicamento</string>
+    <string name="agregar_principio_activo">Agregar principio activo</string>
+
+    <string name="nombre">Nombre</string>
+    <string name="descripcion">Descripción</string>
+    <string name="nombre_del_medicamento">Nombre del medicamento</string>
+    <string name="descripcion_del_medicamento">Descripción del medicamento</string>
+    <string name="nombre_del_principio_activo">Nombre del principio activo</string>
+
+    <string name="guardar">Guardar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="editar">Editar</string>
+    <string name="confirmar_eliminar">¿Eliminar \"%1$s\"?</string>
+    <string name="confirmar_eliminar_definitivo">¿Eliminar \"%1$s\" de forma definitiva? No se volverá a descargar aunque siga existiendo en el servidor.</string>
+    <string name="el_nombre_es_obligatorio">El nombre es obligatorio</string>
+    <string name="la_descripcion_es_obligatoria">La descripción es obligatoria</string>
+
+    <string name="buscar_medicamento">Buscar medicamento</string>
+    <string name="buscar_principio_activo">Buscar principio activo</string>
+
+    <!-- Título de los diálogos de editar/eliminar, con el nombre del item: "Editar Amoxidal" -->
+    <string name="editar_x">Editar %1$s</string>
+    <string name="eliminar_x">Eliminar %1$s</string>
+
+    <string name="medicamento_creado_x">%1$s creado</string>
+    <string name="medicamento_actualizado_x">%1$s actualizado</string>
+    <string name="medicamento_eliminado_x">%1$s eliminado</string>
+
+    <string name="principio_activo_creado_x">%1$s creado</string>
+    <string name="principio_activo_actualizado_x">%1$s actualizado</string>
+    <string name="principio_activo_eliminado_x">%1$s eliminado</string>
+
+    <string name="creacion_cancelada">Creación cancelada</string>
+    <string name="edicion_cancelada_x">Se canceló la edición de %1$s</string>
+    <string name="eliminacion_cancelada_x">Se canceló la eliminación de %1$s</string>
 </resources>

@@ -73,6 +73,22 @@ public class MoneyRecognitionPresenter {
                 mediaPlayer.setOnCompletionListener(MediaPlayer::release);
             }
 
+
+            // Calcular brillo medio
+            double meanBrightness = ImageProcessor.calculateMeanBrightness(image);
+
+            // Verificar brillo bajo
+            if (meanBrightness < 30) {
+                activity.runOnUiThread(() -> announceMessage("El objeto no se distingue correctamente, aleje un poco la cámara o el objeto."));
+                return;
+            }
+
+            // Verificar brillo alto
+            if (meanBrightness > 220) {
+                activity.runOnUiThread(() -> announceMessage("El objeto no se distingue correctamente, cambie levemente la posición o inclinación de la cámara."));
+                return;
+            }
+
             Bitmap bitmap = ImageProcessor.convertToBitmap(image);
             isProcessing = true;
 

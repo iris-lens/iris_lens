@@ -28,7 +28,8 @@ import java.util.concurrent.Executors;
  */
 public class DisplayDetector {
     private static final String TAG = "DisplayDetector";
-    private static final String MODEL_PATH = "detectorDisplay.tflite";
+    private static final String MODEL_PATH_SMALL = "detectorDisplay_small.tflite";
+    private static final String MODEL_PATH_NANO  = "detectorDisplay_nano.tflite";
     private static final String LABELS_PATH = "labelsDisplay.txt";
 
     private static final float CONF_THRESHOLD = 0.45f;
@@ -53,14 +54,15 @@ public class DisplayDetector {
      */
     public DisplayDetector(@NonNull Context context) throws IOException {
         Log.d(TAG, "Inicializando DisplayDetector...");
-        MappedByteBuffer model = FileUtil.loadMappedFile(context, MODEL_PATH);
+        String selectedModel = selectModelPath();
+        MappedByteBuffer model = FileUtil.loadMappedFile(context, selectedModel);
         Interpreter.Options options = new Interpreter.Options();
         int threads = Math.min(2, Runtime.getRuntime().availableProcessors());
         options.setNumThreads(threads);
         options.setUseNNAPI(false);
 
         interpreter = new Interpreter(model, options);
-        Log.d(TAG, "✅ Modelo cargado: " + MODEL_PATH + " | threads=" + threads);
+        Log.d(TAG, "✅ Modelo cargado: " + selectedModel + " | threads=" + threads);
 
         labels = FileUtil.loadLabels(context, LABELS_PATH);
         numClasses = labels.size();
@@ -278,5 +280,23 @@ public class DisplayDetector {
                     label, confidence, boundingBox.left, boundingBox.top,
                     boundingBox.right, boundingBox.bottom);
         }
+    }
+
+    private String selectModelPath() {
+        int sdk = android.os.Build.VERSION.SDK_INT;
+        int cores = Runtime.getRuntime().availableProcessors();
+        long ram = Runtime.getRuntime().maxMemory() / (1024 * 1024); // MB aprox
+
+        Log.d(TAG, "Device info → SDK=" + sdk + " cores=" + cores + " RAM=" + ram + "MB");
+
+        // Dispositivos con bajo recursos
+        if (sdk <= 23 || cores <= 4 || ram < 256) {
+            Log.d(TAG, "📱 Modo ligero → YOLO NANO");
+            return MODEL_PATH_NANO;
+        }
+
+        // Dispositivos con altos recursos
+        Log.d(TAG, "🚀 Modo completo → YOLO SMALL");
+        return MODEL_PATH_SMALL;
     }
 }

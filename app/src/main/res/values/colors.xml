@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#111111</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Azul del logo de Iris Lens, usado en toda la UI para consistencia
+         visual: FAB de "agregar", barra de estado, y botones de los
+         AlertDialog (Guardar/Cancelar/Eliminar). -->
+    <color name="iris_blue">#1247aa</color>
 </resources>

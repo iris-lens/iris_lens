@@ -1,22 +1,32 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <org.opencv.android.JavaCameraView
             android:id="@+id/camera_view"
-            android:layout_width="match_parent"
-            android:layout_height="500dp" />
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="4:3"
+            app:layout_constraintHeight_default="percent"
+            app:layout_constraintHeight_percent="0.6"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/camera_view">
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/camera_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <TextView
                 android:id="@+id/tvResult"
@@ -31,5 +41,6 @@
                 android:importantForAccessibility="yes"
                 android:focusable="true" />
         </ScrollView>
-    </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

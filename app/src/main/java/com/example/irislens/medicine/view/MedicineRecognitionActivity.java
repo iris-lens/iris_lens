@@ -113,7 +113,7 @@ public class MedicineRecognitionActivity extends BaseSwipeActivity {
                     originalImage = com.example.irislens.common.ImageProcessor.rotateImage(originalImage);
                 }
                 // Procesar el frame en el presentador
-                if (presenter != null){
+                if (presenter != null) {
                     presenter.processCameraFrame(originalImage);
                 }
                 // Devolver la imagen original para mostrarla en pantalla
@@ -160,18 +160,25 @@ public class MedicineRecognitionActivity extends BaseSwipeActivity {
         }
     }
 
-
     /**
-     * Heredada, cuando detecta doble tap, pausa el audio
+     * Heredada, cuando detecta doble tap, pausa el audio.
+     *
+     * El orden importa.
+     * - presenter.onDoubleTap() primero: setea doubleTapActive=true y cancela
+     *   sus postDelayed antes de que voiceManager limpie el estado compartido.
+     * - voiceManager.stopAndClear() después: detiene TTS y limpia el TextView.
+     *   Si fuera al revés, el presenter podría encontrar un estado inconsistente
+     *   (currentTextView=null en VoiceManager) cuando sus callbacks tardíos disparen.
      */
     @Override
     protected void onDoubleTapDetected() {
-        if (voiceManager != null) {
-            voiceManager.stopAndClear(tvResult);
-        }
-        // También notificar al presenter
+        // 1. Primero: el presenter cancela sus callbacks y marca el flag
         if (presenter != null) {
             presenter.onDoubleTap();
+        }
+        // 2. Después: el voiceManager detiene el TTS y limpia el texto
+        if (voiceManager != null) {
+            voiceManager.stopAndClear(tvResult);
         }
     }
 

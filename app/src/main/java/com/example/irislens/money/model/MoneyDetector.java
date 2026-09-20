@@ -28,7 +28,8 @@ import java.util.concurrent.Executors;
  */
 public class MoneyDetector {
     private static final String TAG = "MoneyDetector";
-    private static final String MODEL_PATH = "detectorMoney.tflite";
+    private static final String MODEL_PATH_SMALL = "detectorMoney_small.tflite";
+    private static final String MODEL_PATH_NANO  = "detectorMoney_nano.tflite";
     private static final String LABELS_PATH = "labelsMoney.txt";
 
     private static final float CONF_THRESHOLD = 0.85f; // umbral de confianza minimo
@@ -52,7 +53,8 @@ public class MoneyDetector {
     public MoneyDetector(@NonNull Context context) throws IOException {
         Log.d(TAG, "Inicializando MoneyDetector...");
         // Cargar el modelo TFLite desde assets
-        MappedByteBuffer model = FileUtil.loadMappedFile(context, MODEL_PATH);
+        String selectedModel = selectModelPath();
+        MappedByteBuffer model = FileUtil.loadMappedFile(context, selectedModel);
         // Configurar opciones del interprete (numero de hilos, NNAPI)
         Interpreter.Options options = new Interpreter.Options();
         int threads = Math.min(2, Runtime.getRuntime().availableProcessors());
@@ -61,7 +63,7 @@ public class MoneyDetector {
 
         // Inicializar el interprete de TensorFlow Lite
         interpreter = new Interpreter(model, options);
-        Log.d(TAG, "✅ Modelo cargado: " + MODEL_PATH + " | threads=" + threads);
+        Log.d(TAG, "✅ Modelo cargado: " + selectedModel + " | threads=" + threads);
 
         // Cargar las etiquetas desde assets
         labels = FileUtil.loadLabels(context, LABELS_PATH);
@@ -326,5 +328,23 @@ public class MoneyDetector {
             return "DetectionResult{" + "label='" + label + '\'' +
                     ", confidence=" + confidence + ", box=" + boundingBox + '}';
         }
+    }
+
+    private String selectModelPath() {
+        int sdk = android.os.Build.VERSION.SDK_INT;
+        int cores = Runtime.getRuntime().availableProcessors();
+        long ram = Runtime.getRuntime().maxMemory() / (1024 * 1024); // MB aprox
+
+        Log.d(TAG, "Device info → SDK=" + sdk + " cores=" + cores + " RAM=" + ram + "MB");
+
+        // 🔴 Dispositivos con bajos recursos
+        if (sdk <= 23 || cores <= 4 || ram < 256) {
+            Log.d(TAG, "📱 Modo ligero → YOLO NANO");
+            return MODEL_PATH_NANO;
+        }
+
+        // 🚀 Dispositivos con altos recursos
+        Log.d(TAG, "🚀 Modo completo → YOLO SMALL");
+        return MODEL_PATH_SMALL;
     }
 }

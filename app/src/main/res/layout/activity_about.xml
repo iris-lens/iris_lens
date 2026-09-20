@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/aboutScroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/section_title"
+            android:text="Acerca de Iris Lens:"
+            style="@style/manualSection" />
+
+        <TextView
+            android:id="@+id/section_version"
+            android:text="Versión 1."
+            style="@style/manualSection" />
+
+        <TextView
+            android:id="@+id/section_description"
+            android:text="Iris Lens es un proyecto académico que tiene como propósito contribuir a la accesibilidad y autonomía de las personas con discapacidad visual. Aunque el desarrollo activo de la aplicación ha finalizado, su código fuente se encuentra disponible públicamente para fines educativos y de investigación."
+            style="@style/manualSection" />
+
+        <TextView
+            android:id="@+id/section_source_title"
+            android:text="Código fuente:"
+            style="@style/manualSection" />
+
+        <TextView
+            android:id="@+id/section_source"
+            android:text="El código fuente de Iris Lens se encuentra disponible en:"
+            style="@style/manualSection" />
+
+        <TextView
+            android:id="@+id/section_github"
+            android:text="https://github.com/iris-lens/iris_lens"
+            style="@style/manualSection" />
+
+        <TextView
+            android:id="@+id/section_contact_title"
+            android:text="Contacto:"
+            style="@style/manualSection" />
+
+        <TextView
+            android:id="@+id/section_contact"
+            android:text="Si desea realizar consultas o comentarios sobre el proyecto, puede comunicarse a través del correo electrónico oficial del proyecto:"
+            style="@style/manualSection" />
+
+        <TextView
+            android:id="@+id/section_email"
+            android:text="irislens.app@gmail.com"
+            style="@style/manualSection" />
+
+        <TextView
+            android:id="@+id/section_thanks"
+            android:text="Gracias por utilizar Iris Lens."
+            style="@style/manualSection" />
+
+    </LinearLayout>
+
+</ScrollView>

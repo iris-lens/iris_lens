@@ -64,7 +64,7 @@ public class ImageProcessor {
         // Si el brillo medio del frame es muy bajo o muy alto, se aplican
         // correcciones gamma para mejorar la visibilidad del texto. Si no usa
         // directo la imagen original en escala de grises.
-        if(meanBrightness < 50 && meanBrightness > 200) {
+        if(meanBrightness < 50 || meanBrightness > 200) {
             // Convertir la matriz a CV_32F (por si la correccion gamma tiene valores no enteros)
             image.convertTo(image, CvType.CV_32F);
 
@@ -91,6 +91,27 @@ public class ImageProcessor {
 
         // Devolver la imagen y el brillo medio
         return new Pair<>(image, meanBrightness);
+    }
+
+    /**
+     * Calcula el brillo medio de una imagen
+     *
+     * @param image La imagen a procesar
+     * @return El brillo medio de la imagen
+     */
+    public static double calculateMeanBrightness(Mat image) {
+        Mat gray = new Mat();
+
+        // Convertir a escala de grises SIN modificar la original
+        Imgproc.cvtColor(image, gray, Imgproc.COLOR_RGB2GRAY);
+
+        // Calcular brillo medio
+        Scalar mean = Core.mean(gray);
+        double meanBrightness = mean.val[0];
+
+        gray.release();
+
+        return meanBrightness;
     }
 
     /**

@@ -1,8 +1,6 @@
 package com.example.irislens.medicine.presenter;
 
 import android.app.Activity;
-import android.content.ContentValues;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
@@ -16,6 +14,7 @@ import com.example.irislens.R;
 import com.example.irislens.medicine.model.DatabaseManager;
 import com.example.irislens.common.ImageProcessor;
 import com.example.irislens.medicine.model.ReadImageText;
+import com.example.irislens.medicine.sync.MedicineSyncManager;
 import com.example.irislens.common.AppVoiceManager;
 import com.example.irislens.common.AccessibilityHelper;
 import com.example.irislens.medicine.model.Tools;
@@ -28,9 +27,6 @@ import java.util.concurrent.Executors;
 import java.util.Map;
 
 import androidx.core.util.Pair;
-
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 public class MedicineRecognitionPresenter {
     private static final String TAG = "MedicinePresenter";
@@ -62,12 +58,34 @@ public class MedicineRecognitionPresenter {
         this.mainHandler = new Handler(Looper.getMainLooper());
     }
 
+    /**
+     * Asegura que la base local exista y sincroniza con Firestore usando el
+     * motor único de sync (respeta modificado_local, eliminado_local y
+     * es_semilla). Antes acá había SQL de sync propio con CONFLICT_REPLACE
+     * que borraba y reemplazaba filas sin respetar ediciones locales — no
+     * volver a hacer eso.
+     */
     public void initDatabase() {
-        SQLiteDatabase db = dbManager.getReadableDatabase();
-        if (db != null) {
-            Log.d("DB", "Base de datos creada y sincronizando con Firestore...");
-            syncWithFirestore(db);
-        }
+        dbManager.getReadableDatabase();
+        Log.d("DB", "Base de datos lista. Sincronizando con Firestore...");
+
+        MedicineSyncManager syncManager = new MedicineSyncManager(activity.getApplicationContext());
+
+        syncManager.sincronizarMedicamentos((nuevos, actualizados, vinculados) -> {
+            Toast.makeText(activity,
+                    "Medicamentos — nuevos: " + nuevos +
+                            ", actualizados: " + actualizados +
+                            ", vinculados: " + vinculados,
+                    Toast.LENGTH_SHORT).show();
+        });
+
+        syncManager.sincronizarPrincipiosActivos((nuevos, actualizados, vinculados) -> {
+            Toast.makeText(activity,
+                    "Principios activos — nuevos: " + nuevos +
+                            ", actualizados: " + actualizados +
+                            ", vinculados: " + vinculados,
+                    Toast.LENGTH_SHORT).show();
+        });
     }
 
     public Mat rotateImage(Mat image) {
@@ -96,9 +114,15 @@ public class MedicineRecognitionPresenter {
             Mat mRgba = processedImageAndBrightness.first;
             double meanBrightness = processedImageAndBrightness.second;
 
-            if (meanBrightness < 10) {
-                String msg = "Debe estar en un lugar más iluminado para evitar errores de detección";
-                announceMessage(msg);
+            // Verificar brillo bajo
+            if (meanBrightness < 30) {
+                activity.runOnUiThread(() -> announceMessage("El objeto no se distingue correctamente, aleje un poco la cámara o el objeto."));
+                return;
+            }
+
+            // Verificar brillo alto
+            if (meanBrightness > 220) {
+                activity.runOnUiThread(() -> announceMessage("El objeto no se distingue correctamente, cambie levemente la posición o inclinación de la cámara."));
                 return;
             }
 
@@ -176,7 +200,11 @@ public class MedicineRecognitionPresenter {
             } else {
                 noDetectionCount++;
                 rotate = true;
-                tvResult.setText("");
+
+                // Solo limpiar si no hay un mensaje activo en pantalla
+                if (!isAnnouncing) {
+                    tvResult.setText("");
+                }
 
                 // Limpiar descripcion de accesibilidad cuando no hay detección
                 if (accessibilityHelper.isTalkBackEnabled()) {
@@ -277,7 +305,7 @@ public class MedicineRecognitionPresenter {
         if (accessibilityHelper.isTalkBackEnabled()) {
             // TalkBack es mas rapido que TTS (~150 palabras/minuto)
             int baseDuration = (int) ((wordCount / 2.5) * 1000);
-            return baseDuration + 1000; //
+            return baseDuration + 1000;
         } else {
             // TTS es mas lento (~120 palabras/minuto)
             int baseDuration = (int) ((wordCount / 2.0) * 1000);
@@ -298,63 +326,6 @@ public class MedicineRecognitionPresenter {
         isAnnouncing = false;
         mainHandler.removeCallbacksAndMessages(null);
         Log.d(TAG, "✅ Voz detenida y pantalla limpia");
-    }
-
-    /**
-     * Sincroniza la base de datos local con Firestore.
-     */
-    public void syncWithFirestore(SQLiteDatabase db) {
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-
-        firestore.collection("medicamentos").get()
-                .addOnSuccessListener(query -> {
-                    int nuevos = 0;
-                    for (DocumentSnapshot doc : query.getDocuments()) {
-                        if (!doc.contains("nombre") || !doc.contains("descripcion")) continue;
-                        String nombre = doc.getString("nombre");
-                        String descripcion = doc.getString("descripcion");
-                        if (nombre == null || descripcion == null) continue;
-
-                        Cursor cursor = db.query("medicamento", new String[]{"nombre"}, "nombre = ?", new String[]{nombre}, null, null, null);
-                        boolean existe = cursor.moveToFirst();
-                        cursor.close();
-
-                        if (!existe) {
-                            ContentValues values = new ContentValues();
-                            values.put("nombre", nombre);
-                            values.put("descripcion", descripcion);
-                            db.insert("medicamento", null, values);
-                            nuevos++;
-                        }
-                    }
-                    if(nuevos > 0)
-                        Toast.makeText(activity, "Nuevos medicamentos: " + nuevos, Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> Toast.makeText(activity, "Error al sincronizar medicamentos", Toast.LENGTH_SHORT).show());
-
-        firestore.collection("principios_activos").get()
-                .addOnSuccessListener(query -> {
-                    int nuevos = 0;
-                    for (DocumentSnapshot doc : query.getDocuments()) {
-                        if (!doc.contains("nombre")) continue;
-                        String nombre = doc.getString("nombre");
-                        if (nombre == null) continue;
-
-                        Cursor cursor = db.query("principio_activo", new String[]{"nombre"}, "nombre = ?", new String[]{nombre}, null, null, null);
-                        boolean existe = cursor.moveToFirst();
-                        cursor.close();
-
-                        if (!existe) {
-                            ContentValues values = new ContentValues();
-                            values.put("nombre", nombre);
-                            db.insert("principio_activo", null, values);
-                            nuevos++;
-                        }
-                    }
-                    if(nuevos > 0)
-                        Toast.makeText(activity, "Nuevos principios activos: " + nuevos, Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> Toast.makeText(activity, "Error al sincronizar principios activos", Toast.LENGTH_SHORT).show());
     }
 
     public void onDestroy() {

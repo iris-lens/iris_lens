@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/manualScroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:id="@+id/section_welcome"
+            android:text="Manual de usuario:\nBienvenido al manual de Iris Lens. Deslice hacia arriba o abajo para recorrer las secciones. Toque una sección para escucharla nuevamente."
+            style="@style/manualSection"/>
+
+        <TextView
+            android:id="@+id/section_intro"
+            android:text="Introducción:\nIris Lens es una aplicación diseñada para ayudar a personas con discapacidad visual. Permite reconocer medicamentos, identificar billetes argentinos y leer números en displays digitales. La aplicación funciona sin conexión a internet y puede usarse en cualquier lugar."
+            style="@style/manualSection"/>
+
+        <TextView
+            android:id="@+id/section_accessibility"
+            android:text="Accesibilidad:\nEs compatible con TalkBack y adapta automáticamente sus audios para evitar superposición de voces."
+            style="@style/manualSection"/>
+
+        <TextView
+            android:id="@+id/section_navigation"
+            android:text="Inicio y navegación:\nPara cambiar de función deslice el dedo hacia la izquierda o derecha. Si TalkBack está activado, utilice dos dedos o el gesto configurado en accesibilidad."
+            style="@style/manualSection"/>
+
+        <TextView
+            android:id="@+id/section_interaction"
+            android:text="Interacción:\nLa aplicación guía al usuario con mensajes de voz, textos en pantalla y sonidos. También informa si el objeto fue reconocido o si es necesario mejorar la posición de la cámara o del objeto."
+            style="@style/manualSection"/>
+
+        <TextView
+            android:id="@+id/section_function"
+            android:text="Funcionamiento:\nUna vez elegida una función, la aplicación activa la cámara, analiza las imágenes y comunica el resultado mediante voz y texto."
+            style="@style/manualSection"/>
+
+        <TextView
+            android:id="@+id/section_medicines"
+            android:text="Medicamentos y principios activos:\nPermite consultar y gestionar medicamentos y principios activos. Los datos se sincronizan inicialmente de forma remota y se almacenan localmente, conservando los cambios realizados en el dispositivo."
+            style="@style/manualSection"/>
+
+        <TextView
+            android:id="@+id/section_support"
+            android:text="Uso con soportes:\nLa aplicación puede utilizarse con el celular en la mano. Para reconocer medicamentos o billetes puede ser útil utilizar un soporte que mantenga el teléfono fijo."
+            style="@style/manualSection"/>
+
+    </LinearLayout>
+
+</ScrollView>

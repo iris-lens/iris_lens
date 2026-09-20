@@ -46,6 +46,7 @@ public class MoneyRecognitionActivity extends BaseSwipeActivity {
         tvResult = findViewById(R.id.tvResult);
         String message = "Reconocimiento de billetes. Apunte la cámara hacia el billete que desea reconocer.";
 
+        // Inicializar PermissionManager y solicitar permiso de camara
         permissionManager = new PermissionManager();
         permissionManager.getPermissions(this);
 
@@ -58,7 +59,7 @@ public class MoneyRecognitionActivity extends BaseSwipeActivity {
             // Mostrar información más detallada del error
             if (e.getMessage() != null) {
                 if (e.getMessage().contains("assets")) {
-                    Log.e(TAG, "Error relacionado con assets - verificar que los archivos detectorMoney.tflite y labelsMoney.txt estén en assets/");
+                    Log.e(TAG, "Error relacionado con assets - verificar que los archivos detectorMoney_small.tflite o detectorMoney_nano.tflite, y labelsMoney.txt estén en assets/");
                 } else if (e.getMessage().contains("model")) {
                     Log.e(TAG, "Error del modelo - verificar formato TensorFlow Lite");
                 }
@@ -143,14 +144,25 @@ public class MoneyRecognitionActivity extends BaseSwipeActivity {
         }
     }
 
+    /**
+     * Heredada, cuando detecta doble tap, pausa el audio.
+     *
+     * El orden importa.
+     * - presenter.onDoubleTap() primero: setea doubleTapActive=true y cancela
+     *   sus postDelayed antes de que voiceManager limpie el estado compartido.
+     * - voiceManager.stopAndClear() después: detiene TTS y limpia el TextView.
+     *   Si fuera al revés, el presenter podría encontrar un estado inconsistente
+     *   (currentTextView=null en VoiceManager) cuando sus callbacks tardíos disparen.
+     */
     @Override
     protected void onDoubleTapDetected() {
-        if (voiceManager != null) {
-            voiceManager.stopAndClear(tvResult);
-        }
-        // También notificar al presenter
+        // 1. Primero: el presenter cancela sus callbacks y marca el flag
         if (presenter != null) {
             presenter.onDoubleTap();
+        }
+        // 2. Después: el voiceManager detiene el TTS y limpia el texto
+        if (voiceManager != null) {
+            voiceManager.stopAndClear(tvResult);
         }
     }
 
