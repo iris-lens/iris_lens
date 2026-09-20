@@ -39,7 +39,7 @@
 
         <TextView
             android:id="@+id/section_github"
-            android:text="https://github.com/alecalgaro/iris_lens"
+            android:text="https://github.com/iris-lens/iris_lens"
             style="@style/manualSection" />
 
         <TextView
