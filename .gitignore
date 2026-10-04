@@ -17,3 +17,8 @@ local.properties
 *.keystore
 /app/build/
 /app/google-services.json
+/opencv
+/app/.idea
+/.idea
+/app/proguard-rules - copia.pro
+/app/release
