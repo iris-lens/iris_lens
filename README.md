@@ -49,6 +49,19 @@ Aunque el desarrollo activo de la aplicación ha finalizado, su código fuente s
 
 <br>
 
+## Descarga y demostración
+
+Para descargar la aplicación Iris Lens, consultar la guía de instalación y acceder al video demostrativo, ingresar a la [**carpeta de Google Drive**](https://drive.google.com/drive/folders/1eFofYrM0xuCaRJ7oSNxCojbibvtHll9w).
+
+La carpeta contiene:
+- IrisLens.apk — Archivo de instalación de la aplicación.
+- IrisLens - Guía de instalación.pdf — Instrucciones para instalar la aplicación.
+- IrisLens - Video demostrativo para asistir a personas con discapacidad visual.mp4 — Video explicativo sobre el funcionamiento general de la aplicación.
+
+Nota: La aplicación se distribuye mediante un archivo APK para fines académicos y de demostración. Para instalarla, puede ser necesario habilitar la instalación de aplicaciones desde fuentes externas en el dispositivo Android.
+
+<br>
+
 ## Configuración del proyecto
 
 ### OpenCV
